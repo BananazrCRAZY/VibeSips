@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import './App.css'
 
-interface CoffeShop {
+interface CoffeeShop {
   id: number;
   name: string;
   city: string;
@@ -12,6 +12,7 @@ function App() {
   const [coffeeShops, setCoffeeShops] = useState<CoffeeShop[]>([]);
 
   useEffect(() => {
+    // http request to the api endpoint
     fetch("http://localhost:8000/coffee-shops")
       .then((response) => response.json())
       .then((data) => {
