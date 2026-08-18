@@ -10,5 +10,16 @@ for react page in frontend
 npm run dev
 http://localhost:5173
 
-put database connection string in backend .env (DATABASE_URL=)
-add +psycopg and percent encode password
+put database connection string (session pooler) in backend .env (DATABASE_URL=)
+add "+psycopg" and percent encode password
+React
+  ↓
+FastAPI
+  ↓
+SQLAlchemy
+  ↓
+psycopg
+  ↓
+Supabase Session Pooler
+  ↓
+PostgreSQL
