@@ -3,7 +3,7 @@ pip freeze > requirements.txt
 
 to activate python environment in backend
 venv\Scripts\activate
-uvicorn main:app --reload
+uvicorn app.main:app --reload
 localhost:8000
 
 for react page in frontend

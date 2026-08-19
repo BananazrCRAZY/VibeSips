@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.database import SessionLocal
+from app.models import CoffeeShop
 
 app = FastAPI()
 
@@ -13,15 +15,10 @@ app.add_middleware(
 
 @app.get("/coffee-shops")
 def get_coffee_shops():
-    return [
-    {
-        "id": 1,
-        "name": "Arcade Coffee Roasters",
-        "city": "Riverside"
-    },
-    {
-        "id": 2,
-        "name": "Condron Coffee",
-        "city": "Riverside"
-    }
-]
+    db = SessionLocal()
+
+    coffee_shops = db.query(CoffeeShop).all()
+
+    db.close()
+
+    return coffee_shops
