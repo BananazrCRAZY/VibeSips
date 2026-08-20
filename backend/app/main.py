@@ -1,6 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from app.database import SessionLocal
+from sqlalchemy.orm import Session
+from app.database import get_db
 from app.models import CoffeeShop
 
 app = FastAPI()
@@ -13,12 +14,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# api call endpoint
 @app.get("/coffee-shops")
-def get_coffee_shops():
-    db = SessionLocal()
-
+def get_coffee_shops(db: Session = Depends(get_db)):
     coffee_shops = db.query(CoffeeShop).all()
-
-    db.close()
 
     return coffee_shops

@@ -25,3 +25,12 @@ SessionLocal = sessionmaker(
 )
 
 Base = declarative_base()
+
+# create a db session w/o manual close
+def get_db():
+    db = SessionLocal()
+
+    try:
+        yield db
+    finally:
+        db.close()

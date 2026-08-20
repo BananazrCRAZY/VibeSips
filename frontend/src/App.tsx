@@ -5,6 +5,10 @@ interface CoffeeShop {
   id: number;
   name: string;
   city: string;
+  address: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  description: string | null;
 }
 
 function App() {
