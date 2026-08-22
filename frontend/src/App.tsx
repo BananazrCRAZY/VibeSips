@@ -1,3 +1,4 @@
+import { BrowserRouter, Routes, Route, Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./App.css";
 
@@ -11,9 +12,8 @@ interface CoffeeShop {
   description: string | null;
 }
 
-function App() {
+function CoffeeShopList() {
   const [coffeeShops, setCoffeeShops] = useState<CoffeeShop[]>([]);
-  const [selectedShop, setSelectedShop] = useState<CoffeeShop | null>(null);
 
   useEffect(() => {
     // http request to api endpoint
@@ -24,45 +24,72 @@ function App() {
       });
   }, []);
 
-  function handleShopClick(shopId: number) {
-    fetch(`http://localhost:8000/coffee-shops/${shopId}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setSelectedShop(data);
-      });
-  }
-
   return (
     <>
       <h1>VibeSips</h1>
-
       <h2>Coffee Shops</h2>
 
       {coffeeShops.map((shop) => (
         <div key={shop.id}>
-          <button onClick={() => handleShopClick(shop.id)}>
+          <Link to={`/coffee-shops/${shop.id}`}>
             {shop.name}
-          </button>
+          </Link>
+
           <p>{shop.city}</p>
         </div>
       ))}
+    </>
+  );
+}
 
-      {selectedShop && (
-        <section>
-          <h2>{selectedShop.name}</h2>
+function CoffeeShopDetail() {
+  const { shopId } = useParams();
 
-          <p>City: {selectedShop.city}</p>
+  const [coffeeShop, setCoffeeShop] = useState<CoffeeShop | null>(null);
 
-          {selectedShop.address && (
-            <p>Address: {selectedShop.address}</p>
-          )}
+  useEffect(() => {
+    fetch(`http://localhost:8000/coffee-shops/${shopId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setCoffeeShop(data);
+      });
+  }, [shopId]);
 
-          {selectedShop.description && (
-            <p>{selectedShop.description}</p>
-          )}
-        </section>
+  if (!coffeeShop) {
+    return <p>Loading...</p>;
+  }
+
+  return (
+    <>
+      <Link to="/">← Back to coffee shops</Link>
+
+      <h1>{coffeeShop.name}</h1>
+
+      <p>City: {coffeeShop.city}</p>
+
+      {coffeeShop.address && (
+        <p>Address: {coffeeShop.address}</p>
+      )}
+
+      {coffeeShop.description && (
+        <p>{coffeeShop.description}</p>
       )}
     </>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<CoffeeShopList />} />
+
+        <Route
+          path="/coffee-shops/:shopId"
+          element={<CoffeeShopDetail />}
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
